@@ -1,0 +1,719 @@
+This is METAFONT, Version 2.71828182 (preloaded base=mf 2022.8.10)  17 JUL 2023 20:01
+**component_pkg.vhd packages/
+(component_pkg.vhd
+>> library.IEEE
+! Isolated expression.
+<to be read again> 
+                   ;
+l.1 library IEEE;
+                 
+? q
+OK, entering batchmode...
+>> use.IEEE.std_logic_1164all
+! Isolated expression.
+<to be read again> 
+                   ;
+l.2 use IEEE.std_logic_1164.all;
+                                
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+>> use.IEEE.numeric_std.all
+! Isolated expression.
+<to be read again> 
+                   ;
+l.3 use IEEE.numeric_std.all;
+                             
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+>> package.component_pkg.is.component.axi_reg_slave.is.generic
+! Isolated expression.
+<to be read again> 
+                   (
+l.8     generic (
+                 
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   (
+l.8     generic (
+                 
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> C_S_AXI_ADDR_WIDTH
+! Isolated expression.
+<to be read again> 
+                   :
+l.10       C_S_AXI_ADDR_WIDTH	:
+                                integer	:= 7
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.10       C_S_AXI_ADDR_WIDTH	:
+                                integer	:= 7
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> port
+! Isolated expression.
+<to be read again> 
+                   (
+l.12     port (
+               
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   (
+l.12     port (
+               
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> i_output_valid
+! Isolated expression.
+<to be read again> 
+                   :
+l.15       i_output_valid  :
+                             in  std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.15       i_output_valid  :
+                             in  std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> o_row1
+! Isolated expression.
+<to be read again> 
+                   :
+l.16       o_row1          :
+                             out std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.16       o_row1          :
+                             out std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> o_row2
+! Isolated expression.
+<to be read again> 
+                   :
+l.17       o_row2          :
+                             out std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.17       o_row2          :
+                             out std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> o_row3
+! Isolated expression.
+<to be read again> 
+                   :
+l.18       o_row3          :
+                             out std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.18       o_row3          :
+                             out std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> i_out1
+! Isolated expression.
+<to be read again> 
+                   :
+l.19       i_out1          :
+                             in  std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.19       i_out1          :
+                             in  std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> i_out2
+! Isolated expression.
+<to be read again> 
+                   :
+l.20       i_out2          :
+                             in  std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.20       i_out2          :
+                             in  std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> i_out3
+! Isolated expression.
+<to be read again> 
+                   :
+l.21       i_out3          :
+                             in  std_logic_vector(32 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.21       i_out3          :
+                             in  std_logic_vector(32 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+! A statement can't begin with `{'.
+<to be read again> 
+                   {
+--->{
+     curl1}..{curl1}
+l.22       --
+              User ports ends
+I was looking for the beginning of a new statement.
+If you just proceed without changing anything, I'll ignore
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   {
+--->{
+     curl1}..{curl1}
+l.22       --
+              User ports ends
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_ARESETN
+! Isolated expression.
+<to be read again> 
+                   :
+l.27       S_AXI_ARESETN	:
+                           in std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.27       S_AXI_ARESETN	:
+                           in std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_AWADDR
+! Isolated expression.
+<to be read again> 
+                   :
+l.28       S_AXI_AWADDR	:
+                          in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.28       S_AXI_AWADDR	:
+                          in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_AWPROT
+! Isolated expression.
+<to be read again> 
+                   :
+l.29       S_AXI_AWPROT	:
+                          in std_logic_vector(2 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.29       S_AXI_AWPROT	:
+                          in std_logic_vector(2 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_AWVALID
+! Isolated expression.
+<to be read again> 
+                   :
+l.30       S_AXI_AWVALID	:
+                           in std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.30       S_AXI_AWVALID	:
+                           in std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_AWREADY
+! Isolated expression.
+<to be read again> 
+                   :
+l.31       S_AXI_AWREADY	:
+                           out std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.31       S_AXI_AWREADY	:
+                           out std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_WDATA
+! Isolated expression.
+<to be read again> 
+                   :
+l.32       S_AXI_WDATA	:
+                         in std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.32       S_AXI_WDATA	:
+                         in std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_WSTRB
+! Isolated expression.
+<to be read again> 
+                   :
+l.33       S_AXI_WSTRB	:
+                         in std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto...
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.33       S_AXI_WSTRB	:
+                         in std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto...
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_WVALID
+! Isolated expression.
+<to be read again> 
+                   :
+l.34       S_AXI_WVALID	:
+                          in std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.34       S_AXI_WVALID	:
+                          in std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_WREADY
+! Isolated expression.
+<to be read again> 
+                   :
+l.35       S_AXI_WREADY	:
+                          out std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.35       S_AXI_WREADY	:
+                          out std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_BRESP
+! Isolated expression.
+<to be read again> 
+                   :
+l.36       S_AXI_BRESP	:
+                         out std_logic_vector(1 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.36       S_AXI_BRESP	:
+                         out std_logic_vector(1 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_BVALID
+! Isolated expression.
+<to be read again> 
+                   :
+l.37       S_AXI_BVALID	:
+                          out std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.37       S_AXI_BVALID	:
+                          out std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_BREADY
+! Isolated expression.
+<to be read again> 
+                   :
+l.38       S_AXI_BREADY	:
+                          in std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.38       S_AXI_BREADY	:
+                          in std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_ARADDR
+! Isolated expression.
+<to be read again> 
+                   :
+l.39       S_AXI_ARADDR	:
+                          in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.39       S_AXI_ARADDR	:
+                          in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_ARPROT
+! Isolated expression.
+<to be read again> 
+                   :
+l.40       S_AXI_ARPROT	:
+                          in std_logic_vector(2 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.40       S_AXI_ARPROT	:
+                          in std_logic_vector(2 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_ARVALID
+! Isolated expression.
+<to be read again> 
+                   :
+l.41       S_AXI_ARVALID	:
+                           in std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.41       S_AXI_ARVALID	:
+                           in std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_ARREADY
+! Isolated expression.
+<to be read again> 
+                   :
+l.42       S_AXI_ARREADY	:
+                           out std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.42       S_AXI_ARREADY	:
+                           out std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_RDATA
+! Isolated expression.
+<to be read again> 
+                   :
+l.43       S_AXI_RDATA	:
+                         out std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.43       S_AXI_RDATA	:
+                         out std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_RRESP
+! Isolated expression.
+<to be read again> 
+                   :
+l.44       S_AXI_RRESP	:
+                         out std_logic_vector(1 downto 0);
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.44       S_AXI_RRESP	:
+                         out std_logic_vector(1 downto 0);
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_RVALID
+! Isolated expression.
+<to be read again> 
+                   :
+l.45       S_AXI_RVALID	:
+                          out std_logic;
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.45       S_AXI_RVALID	:
+                          out std_logic;
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+>> S_AXI_RREADY
+! Isolated expression.
+<to be read again> 
+                   :
+l.46       S_AXI_RREADY	:
+                          in std_logic
+I couldn't find an `=' or `:=' after the
+expression that is shown above this error message,
+so I guess I'll just ignore it and carry on.
+
+! Extra tokens will be flushed.
+<to be read again> 
+                   :
+l.46       S_AXI_RREADY	:
+                          in std_logic
+I've just read as much of that statement as I could fathom,
+so a semicolon should have been next. It's very puzzling...
+but I'll try to get myself back together, by ignoring
+everything up to the next `;'. Please insert a semicolon
+now in front of anything that you don't want me to delete.
+(See Chapter 27 of The METAFONTbook for an example.)
+
+ )
