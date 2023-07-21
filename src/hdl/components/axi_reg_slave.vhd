@@ -6,7 +6,8 @@ entity axi_reg_slave is
 	generic (
 		NUM_REGS        : integer := 32;
 		AXI_DATA_WIDTH	: integer	:= 32;
-		AXI_ADDR_WIDTH	: integer	:= 7
+		AXI_ADDR_WIDTH	: integer	:= 7;
+		RD_ONLY         : std_logic_vector(NUM_REGS-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
 	);
 	port (
 		-- register data
@@ -14,7 +15,8 @@ entity axi_reg_slave is
 		o_regs_wr_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
 		o_regs_rd_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
 		i_regs          : in  std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
-		i_regs_wr       : in  std_logic_vector(NUM_REGS-1 downto 0);
+		i_regs_wr_val   : in  std_logic_vector(NUM_REGS-1 downto 0);
+		o_regs_wr_rdy   : out std_logic_vector(NUM_REGS-1 downto 0);
 
 		-- AXI bus
 		S_AXI_ACLK	: in std_logic;
@@ -77,6 +79,8 @@ architecture arch_imp of axi_reg_slave is
 	signal byte_index	: integer;
 	signal aw_en	: std_logic;
 
+	signal regs_wr_rdy : std_logic_vector(NUM_REGS-1 downto 0);  -- '1' when reg can be written to by PL
+
 begin
 	-- I/O Connections assignments
 
@@ -93,6 +97,7 @@ begin
 	-- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
 	-- de-asserted when reset is low.
 
+	o_regs_wr_rdy <= regs_wr_rdy;
 	opt_awaddr <= axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
 
 	connect_o_regs : for i in 0 to NUM_REGS-1 generate
@@ -180,16 +185,37 @@ begin
 	    if S_AXI_ARESETN = '0' then
 				reg_array <= (others => (others => '0'));
 	    else
-	      if (reg_array_wren = '1') then
+			  -- incoming writes from AXI
+	      if (reg_array_wren = '1' and RD_ONLY(opt_awaddr) = '0') then
 					for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
 						if ( S_AXI_WSTRB(byte_index) = '1' ) then
 							reg_array(unsigned(opt_awaddr))(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
 						end if;
 					end loop;
 	      end if;
+				
+				-- incoming writes from PL
+				for i in 0 to NUM_REGS : loop
+					if (i_regs_wr_val(i) = '1' and regs_wr_rdy(i)) then
+						reg_array(i) <= i_regs(i);
+					end if;
+				end loop;
 	    end if;
 	  end if;                   
 	end process; 
+
+	for i in 0 to NUM_REGS generate
+	  -- RD_ONLY regs can always be written
+	  if (RD_ONLY(i) = '1') then
+			regs_wr_rdy(i) <= '1';
+		-- Don't write regs while AXI is writing them
+	  elsif (reg_array_wren = '1' and unsigned(opt_awaddr) = i)  
+		  regs_wr_rdy(i) <= '0';
+		else
+		  regs_wr_rdy(i) <= '1';
+		end if;
+	end generate;
+
 
 	-- Output 1-cycle pulse corresponding to register that was written or read via AXI
 	process(S_AXI_ACLK)

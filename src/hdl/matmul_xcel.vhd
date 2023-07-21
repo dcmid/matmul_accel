@@ -41,15 +41,13 @@ entity matmul_xcel is
 end entity matmul_xcel;
 
 architecture rtl of matmul_xcel is
+  constant NUM_REGS : integer := 32;
 
-  signal input_ready  : std_logic_vector(31 downto 0);
-  signal output_valid : std_logic_vector(31 downto 0);
-  signal row1         : std_logic_vector(31 downto 0);
-  signal row2         : std_logic_vector(31 downto 0);
-  signal row3         : std_logic_vector(31 downto 0);
-  signal out1         : std_logic_vector(31 downto 0);
-  signal out2         : std_logic_vector(31 downto 0);
-  signal out3         : std_logic_vector(31 downto 0);
+  signal rd_regs      : std_logic_vector(NUM_REGS*BIT_WIDTH-1 downto 0);
+  signal wr_regs      : std_logic_vector(NUM_REGS*BIT_WIDTH-1 downto 0);
+  signal axi_rd_pulse : std_logic_vector(NUM_REGS-1 downto 0);
+  signal axi_wr_pulse : std_logic_vector(NUM_REGS-1 downto 0);
+
   signal rst          : std_logic;
 
   -- signal msg_recv_msg  : bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2);
@@ -82,14 +80,11 @@ begin
     C_S_AXI_ADDR_WIDTH => 7
   )
   port map(
-    i_input_ready   => input_ready,
-    i_output_valid  => output_valid,
-    o_row1          => row1,
-    o_row2          => row2,
-    o_row3          => row3,
-    i_out1          => out1,
-    i_out2          => out2,
-    i_out3          => out3,
+    o_regs          => rd_regs,
+    o_regs_wr_pulse => axi_wr_pulse,
+    o_regs_rd_pulse => axi_rd_pulse,
+    i_regs          => wr_regs,
+    i_regs_wr       => (others => '0'),
 
     S_AXI_ACLK      => S_AXI_ACLK,
     S_AXI_ARESETN   => S_AXI_ARESETN,
