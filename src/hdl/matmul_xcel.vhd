@@ -41,17 +41,21 @@ entity matmul_xcel is
 end entity matmul_xcel;
 
 architecture rtl of matmul_xcel is
-  constant NUM_REGS : integer := 32;
+  constant NUM_REGS     : integer := 32;
+  constant MSG_WIDTH    : integer := BIT_WIDTH + 2;
+  constant PP_MSG_WIDTH : integer := BIT_WIDTH + 1;
 
   signal rd_regs      : std_logic_vector(NUM_REGS*BIT_WIDTH-1 downto 0);
   signal wr_regs      : std_logic_vector(NUM_REGS*BIT_WIDTH-1 downto 0);
   signal axi_rd_pulse : std_logic_vector(NUM_REGS-1 downto 0);
   signal axi_wr_pulse : std_logic_vector(NUM_REGS-1 downto 0);
+  signal regs_wr_val  : std_logic_vector(NUM_REGS-1 downto 0);
+  signal regs_wr_rdy  : std_logic_vector(NUM_REGS-1 downto 0);
 
   signal rst          : std_logic;
-
-  -- signal msg_recv_msg  : bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2);
-  -- signal prod_send_msg : bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1+1);
+  
+  signal msg_recv_msg  : std_logic_vector(NUM_ROWS*MSG_WIDTH downto 0);
+  signal prod_send_msg : std_logic_vector(NUM_COLS*PP_MSG_WIDTH downto 0);
   
 begin
 
@@ -64,10 +68,10 @@ begin
     BIT_WIDTH => 8
   )
   port map(
-    i_msg_recv_msg  => (others => (others => '0')), --msg_recv_msg,
+    i_msg_recv_msg  => msg_recv_msg,
     i_msg_recv_val  => (others => '1'),
     o_msg_recv_rdy  => input_ready(1 downto 0),
-    o_prod_send_msg => open, --prod_send_msg,
+    o_prod_send_msg => prod_send_msg,
     o_prod_send_val => output_valid(1 downto 0),
     i_prod_send_rdy => (others => '1'),
     i_clk           => S_AXI_ACLK,
@@ -84,7 +88,8 @@ begin
     o_regs_wr_pulse => axi_wr_pulse,
     o_regs_rd_pulse => axi_rd_pulse,
     i_regs          => wr_regs,
-    i_regs_wr       => (others => '0'),
+    i_regs_wr_val   => regs_wr_val,
+    o_regs_wr_rdy   => regs_wr_rdy,
 
     S_AXI_ACLK      => S_AXI_ACLK,
     S_AXI_ARESETN   => S_AXI_ARESETN,

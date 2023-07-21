@@ -14,11 +14,11 @@ package component_pkg is
       BIT_WIDTH   : integer := 8
     );
     port (
-      i_msg_recv_msg    : in  bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2 downto 0);
+      i_msg_recv_msg    : in  std_logic_vector(NUM_ROWS*(BIT_WIDTH+2)-1 downto 0);
       i_msg_recv_val    : in  std_logic_vector(NUM_ROWS-1 downto 0);
       o_msg_recv_rdy    : out std_logic_vector(NUM_ROWS-1 downto 0);
-      
-      o_prod_send_msg    : out bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
+     
+      o_prod_send_msg    : out std_logic_vector(NUM_COLS*(BIT_WIDTH+1)-1 downto 0);
       o_prod_send_val    : out std_logic_vector(NUM_COLS-1 downto 0);
       i_prod_send_rdy    : in  std_logic_vector(NUM_COLS-1 downto 0);
   
@@ -39,7 +39,8 @@ package component_pkg is
       o_regs_wr_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
       o_regs_rd_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
       i_regs          : in  std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
-      i_regs_wr       : in  std_logic_vector(NUM_REGS-1 downto 0);
+      i_regs_wr_val   : in  std_logic_vector(NUM_REGS-1 downto 0);
+      o_regs_wr_rdy   : out std_logic_vector(NUM_REGS-1 downto 0);
   
       -- AXI bus
       S_AXI_ACLK	: in std_logic;

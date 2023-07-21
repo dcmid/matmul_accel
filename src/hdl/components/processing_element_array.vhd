@@ -14,11 +14,13 @@ entity processing_element_array is
     BIT_WIDTH   : integer := 8
   );
   port (
-    i_msg_recv_msg    : in  bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2 downto 0);
+    i_msg_recv_msg    : in  std_logic_vector(NUM_ROWS*(BIT_WIDTH+2)-1 downto 0);
+    -- i_msg_recv_msg    : in  bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2 downto 0);
     i_msg_recv_val    : in  std_logic_vector(NUM_ROWS-1 downto 0);
     o_msg_recv_rdy    : out std_logic_vector(NUM_ROWS-1 downto 0);
-    
-    o_prod_send_msg    : out bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
+   
+    o_prod_send_msg    : out std_logic_vector(NUM_COLS*(BIT_WIDTH+1)-1 downto 0);
+    -- o_prod_send_msg    : out bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
     o_prod_send_val    : out std_logic_vector(NUM_COLS-1 downto 0);
     i_prod_send_rdy    : in  std_logic_vector(NUM_COLS-1 downto 0);
 
@@ -123,14 +125,14 @@ begin
       end generate ppif;
       -- connect last row to ports
       lastrow : if (i = NUM_ROWS-1) generate
-        o_prod_send_msg(j)      <=  part_prod_send(i,j);
-        o_prod_send_val(j)      <=  part_prod_send_val(i,j);
-        part_prod_send_rdy(i,j) <=  i_prod_send_rdy(j);
+        o_prod_send_msg((j+1)*PP_MSG_WIDTH-1 downto i*PP_MSG_WIDTH) <=  part_prod_send(i,j);
+        o_prod_send_val(j)        <=  part_prod_send_val(i,j);
+        part_prod_send_rdy(i,j)   <=  i_prod_send_rdy(j);
       end generate lastrow;
 
       -- connect message signals
       msgif : if (j = 0) generate
-        msg_recv(i,j)     <= i_msg_recv_msg(i);
+        msg_recv(i,j)     <= i_msg_recv_msg((i+1)*MSG_WIDTH-1 downto i*MSG_WIDTH);
         msg_recv_val(i,j) <= i_msg_recv_val(i);
         o_msg_recv_rdy(i) <= msg_recv_rdy(i,j);
       else generate
