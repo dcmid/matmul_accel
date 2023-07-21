@@ -170,15 +170,16 @@ begin
 	reg_array_wren <= axi_wready and S_AXI_WVALID and axi_awready and S_AXI_AWVALID ;
 
 	process (S_AXI_ACLK)
-	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS - 1 downto 0); 
 	begin
 	  if rising_edge(S_AXI_ACLK) then 
 	    if S_AXI_ARESETN = '0' then
 				reg_array <= (others => others => '0');
 	    else
-	      loc_addr := axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
 	      if (reg_array_wren = '1') then
-	        case loc_addr is
+					for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
+						reg_array[unsigned(opt_awaddr)]
+					end loop
+	        case opt_awaddr is
 	          when b"00000" => NULL;
 	          --   for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
 	          --     if ( S_AXI_WSTRB(byte_index) = '1' ) then
@@ -556,11 +557,9 @@ begin
 	reg_array_rden <= axi_arready and S_AXI_ARVALID and (not axi_rvalid) ;
 
 	process (reg_array, axi_araddr, S_AXI_ARESETN, reg_array_rden)
-	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS - 1 downto 0);
 	begin
 	    -- Address decoding for reading registers
-	    loc_addr := axi_araddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
-			reg_data_out <= reg_array(unsigned(loc_addr));
+			reg_data_out <= reg_array(unsigned(opt_araddr));
 	end process; 
 
 	-- Output register or memory read data
