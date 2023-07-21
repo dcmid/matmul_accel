@@ -44,30 +44,32 @@ architecture arch_imp of axi_reg_slave is
 
 	type reg_array_t is array(NUM_REGS-1 downto 0) of std_logic_vector(AXI_DATA_WIDTH-1 downto 0);
 
-	-- AXI4LITE signals
-	signal axi_awaddr	: std_logic_vector(AXI_ADDR_WIDTH-1 downto 0);
-	signal axi_awready	: std_logic;
-	signal axi_wready	: std_logic;
-	signal axi_bresp	: std_logic_vector(1 downto 0);
-	signal axi_bvalid	: std_logic;
-	signal axi_araddr	: std_logic_vector(AXI_ADDR_WIDTH-1 downto 0);
-	signal axi_arready	: std_logic;
-	signal axi_rdata	: std_logic_vector(AXI_DATA_WIDTH-1 downto 0);
-	signal axi_rresp	: std_logic_vector(1 downto 0);
-	signal axi_rvalid	: std_logic;
-
-	-- Example-specific design signals
 	-- local parameter for addressing 32 bit / 64 bit AXI_DATA_WIDTH
 	-- ADDR_LSB is used for addressing 32/64 bit registers/memories
 	-- ADDR_LSB = 2 for 32 bits (n downto 2)
 	-- ADDR_LSB = 3 for 64 bits (n downto 3)
 	constant ADDR_LSB  : integer := (AXI_DATA_WIDTH/32)+ 1;
-	constant OPT_MEM_ADDR_BITS : integer := 4;
+	constant OPT_MEM_ADDR_BITS : integer := log2(NUM_REGS);
+
+	-- AXI4LITE signals
+	signal axi_awaddr	: std_logic_vector(AXI_ADDR_WIDTH-1 downto 0);
+	signal opt_awaddr : std_logic_vector(OPT_MEM_ADDR_BITS-1 downto 0);
+	signal axi_awready	: std_logic;
+	signal axi_wready	: std_logic;
+	signal axi_bresp	: std_logic_vector(1 downto 0);
+	signal axi_bvalid	: std_logic;
+	signal axi_araddr	: std_logic_vector(AXI_ADDR_WIDTH-1 downto 0);
+	signal opt_araddr : std_logic_vector(OPT_MEM_ADDR_BITS-1 downto 0);
+	signal axi_arready	: std_logic;
+	signal axi_rdata	: std_logic_vector(AXI_DATA_WIDTH-1 downto 0);
+	signal axi_rresp	: std_logic_vector(1 downto 0);
+	signal axi_rvalid	: std_logic;
+
 	------------------------------------------------
 	---- Signals for user logic register space example
 	--------------------------------------------------
 		-- array of all registers
-		signal reg_array : reg_array_t;
+	signal reg_array : reg_array_t;
 	signal reg_array_rden	: std_logic;
 	signal reg_array_wren	: std_logic;
 	signal reg_data_out	:std_logic_vector(AXI_DATA_WIDTH-1 downto 0);
@@ -89,6 +91,8 @@ begin
 	-- axi_awready is asserted for one S_AXI_ACLK clock cycle when both
 	-- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
 	-- de-asserted when reset is low.
+
+	opt_awaddr <= axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
 
 	process (S_AXI_ACLK)
 	begin
@@ -166,13 +170,13 @@ begin
 	reg_array_wren <= axi_wready and S_AXI_WVALID and axi_awready and S_AXI_AWVALID ;
 
 	process (S_AXI_ACLK)
-	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS downto 0); 
+	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS - 1 downto 0); 
 	begin
 	  if rising_edge(S_AXI_ACLK) then 
 	    if S_AXI_ARESETN = '0' then
 				reg_array <= (others => others => '0');
 	    else
-	      loc_addr := axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS downto ADDR_LSB);
+	      loc_addr := axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
 	      if (reg_array_wren = '1') then
 	        case loc_addr is
 	          when b"00000" => NULL;
@@ -552,10 +556,10 @@ begin
 	reg_array_rden <= axi_arready and S_AXI_ARVALID and (not axi_rvalid) ;
 
 	process (reg_array, axi_araddr, S_AXI_ARESETN, reg_array_rden)
-	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS downto 0);
+	variable loc_addr :std_logic_vector(OPT_MEM_ADDR_BITS - 1 downto 0);
 	begin
 	    -- Address decoding for reading registers
-	    loc_addr := axi_araddr(ADDR_LSB + OPT_MEM_ADDR_BITS downto ADDR_LSB);
+	    loc_addr := axi_araddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
 			reg_data_out <= reg_array(unsigned(loc_addr));
 	end process; 
 
