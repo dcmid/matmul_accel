@@ -14,11 +14,11 @@ entity processing_element_array is
     BIT_WIDTH   : integer := 8
   );
   port (
-    i_msg_recv_msg    : in  bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
+    i_msg_recv_msg    : in  bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2 downto 0);
     i_msg_recv_val    : in  std_logic_vector(NUM_ROWS-1 downto 0);
     o_msg_recv_rdy    : out std_logic_vector(NUM_ROWS-1 downto 0);
     
-    o_prod_send_msg    : out bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1 downto 0);
+    o_prod_send_msg    : out bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
     o_prod_send_val    : out std_logic_vector(NUM_COLS-1 downto 0);
     i_prod_send_rdy    : in  std_logic_vector(NUM_COLS-1 downto 0);
 
@@ -29,24 +29,27 @@ end entity processing_element_array;
 
 architecture rtl of processing_element_array is
 
+  constant MSG_WIDTH : integer := BIT_WIDTH + 2;  -- message contains is_weight and is_flush bits
+  constant PP_MSG_WIDTH : integer := BIT_WIDTH + 1;
+
   component processing_element is
     generic(
       BIT_WIDTH             : integer := 8
     );
     port (
-      i_part_prod_recv      : in  std_logic_vector(BIT_WIDTH-1 downto 0);
+      i_part_prod_recv      : in  pe_part_prod(data(BIT_WIDTH-1 downto 0));
       i_part_prod_recv_val  : in  std_logic;
       o_part_prod_recv_rdy  : out std_logic;
   
-      i_msg_recv            : in  std_logic_vector(BIT_WIDTH-1+1 downto 0);
+      i_msg_recv            : in  pe_message(data(BIT_WIDTH-1 downto 0));
       i_msg_recv_val        : in  std_logic;
       o_msg_recv_rdy        : out std_logic;
   
-      o_part_prod_send      : out std_logic_vector(BIT_WIDTH-1 downto 0);
+      o_part_prod_send      : out pe_part_prod(data(BIT_WIDTH-1 downto 0));
       o_part_prod_send_val  : out std_logic;
       i_part_prod_send_rdy  : in  std_logic;
   
-      o_msg_send            : out std_logic_vector(BIT_WIDTH-1+1 downto 0);
+      o_msg_send            : out pe_message(data(BIT_WIDTH-1 downto 0));
       o_msg_send_val        : out std_logic;
       i_msg_send_rdy        : in  std_logic;
   
@@ -55,19 +58,19 @@ architecture rtl of processing_element_array is
     );
   end component processing_element;
 
-  signal  part_prod_recv      : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(BIT_WIDTH-1 downto 0);
+  signal  part_prod_recv      : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(PP_MSG_WIDTH-1 downto 0);
   signal  part_prod_recv_val  : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
   signal  part_prod_recv_rdy  : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
 
-  signal  msg_recv            : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
+  signal  msg_recv            : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(MSG_WIDTH-1 downto 0);
   signal  msg_recv_val        : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
   signal  msg_recv_rdy        : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
 
-  signal  part_prod_send      : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(BIT_WIDTH-1 downto 0);
+  signal  part_prod_send      : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(PP_MSG_WIDTH-1 downto 0);
   signal  part_prod_send_val  : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
   signal  part_prod_send_rdy  : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
 
-  signal  msg_send            : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
+  signal  msg_send            : array_2d_slv(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0)(MSG_WIDTH-1 downto 0);
   signal  msg_send_val        : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
   signal  msg_send_rdy        : array_2d_sl(NUM_ROWS-1 downto 0, NUM_COLS-1 downto 0);
   
@@ -79,24 +82,30 @@ begin
           BIT_WIDTH     => BIT_WIDTH
         )
         port map(
-          i_part_prod_recv        =>  part_prod_recv(i,j),
-          i_part_prod_recv_val    =>  part_prod_recv_val(i,j),
-          o_part_prod_recv_rdy    =>  part_prod_recv_rdy(i,j),
+          i_part_prod_recv.is_flush   =>  part_prod_recv(i,j)(PP_MSG_WIDTH-1),
+          i_part_prod_recv.data       =>  part_prod_recv(i,j)(BIT_WIDTH-1 downto 0),
+          i_part_prod_recv_val        =>  part_prod_recv_val(i,j),
+          o_part_prod_recv_rdy        =>  part_prod_recv_rdy(i,j),
 
-          i_msg_recv              =>  msg_recv(i,j),
-          i_msg_recv_val          =>  msg_recv_val(i,j),
-          o_msg_recv_rdy          =>  msg_recv_rdy(i,j),
+          i_msg_recv.is_flush         =>  msg_recv(i,j)(MSG_WIDTH-1),
+          i_msg_recv.is_weight        =>  msg_recv(i,j)(MSG_WIDTH-2),
+          i_msg_recv.data             =>  msg_recv(i,j)(BIT_WIDTH-1 downto 0),
+          i_msg_recv_val              =>  msg_recv_val(i,j),
+          o_msg_recv_rdy              =>  msg_recv_rdy(i,j),
 
-          o_part_prod_send        =>  part_prod_send(i,j),
-          o_part_prod_send_val    =>  part_prod_send_val(i,j),
-          i_part_prod_send_rdy    =>  part_prod_send_rdy(i,j),
+          o_part_prod_send.is_flush   =>  part_prod_send(i,j)(PP_MSG_WIDTH-1),
+          o_part_prod_send.data       =>  part_prod_send(i,j)(BIT_WIDTH-1 downto 0),
+          o_part_prod_send_val        =>  part_prod_send_val(i,j),
+          i_part_prod_send_rdy        =>  part_prod_send_rdy(i,j),
 
-          o_msg_send              =>  msg_send(i,j),
-          o_msg_send_val          =>  msg_send_val(i,j),
-          i_msg_send_rdy          =>  msg_send_rdy(i,j),
+          o_msg_send.is_flush         =>  msg_send(i,j)(MSG_WIDTH-1),
+          o_msg_send.is_weight        =>  msg_send(i,j)(MSG_WIDTH-2),
+          o_msg_send.data             =>  msg_send(i,j)(BIT_WIDTH-1 downto 0),
+          o_msg_send_val              =>  msg_send_val(i,j),
+          i_msg_send_rdy              =>  msg_send_rdy(i,j),
 
-          i_clk                   => i_clk,
-          i_rst                   => i_rst
+          i_clk                       => i_clk,
+          i_rst                       => i_rst
         );
       end generate nest_component_gen;
   end generate component_gen;

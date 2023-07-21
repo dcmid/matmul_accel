@@ -14,10 +14,11 @@ vlib matmul
 vcom -2008 -work matmul     $origin_dir/../../hdl/packages/type_pkg.vhd
 
 vlib work
-vlog -work work       $origin_dir/processing_element_tb.sv
+# vcom -2008 -work work       $origin_dir/processing_element_array_tb.vhd
+vlog -work work             $origin_dir/processing_element_array_tb.sv
 
 vcom -2008 -work work       $origin_dir/../../hdl/components/fwft_fifo.vhd
 vcom -2008 -work work       $origin_dir/../../hdl/components/processing_element.vhd
 vcom -2008 -work work       $origin_dir/../../hdl/components/processing_element_array.vhd
 
-vsim -t 1ps -novopt work.processing_element_tb
+vsim -t 1ps -novopt work.processing_element_array_tb

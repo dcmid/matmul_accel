@@ -12,12 +12,15 @@ vmap unisim           $UNISIM_DIR/unisim
 
 vlib matmul
 vcom -2008 -work matmul     $origin_dir/../hdl/packages/type_pkg.vhd
+vcom -2008 -work matmul     $origin_dir/../hdl/packages/component_pkg.vhd
 
 vlib work
-# vcom -2008 -work work       $origin_dir/processing_element_array_tb.vhd
-vlog -work work             $origin_dir/processing_element_array_tb.sv
+vlog -work work             $origin_dir/matmul_xcel_tb.sv
 
+vcom -2008 -work work       $origin_dir/../hdl/components/fwft_fifo.vhd
 vcom -2008 -work work       $origin_dir/../hdl/components/processing_element.vhd
 vcom -2008 -work work       $origin_dir/../hdl/components/processing_element_array.vhd
+vcom -work work             $origin_dir/../hdl/components/axi_reg_slave.vhd
+vcom -2008 -work work       $origin_dir/../hdl/matmul_xcel.vhd
 
-vsim -t 1ps -novopt work.processing_element_array_tb
+vsim -t 1ps -novopt work.matmul_xcel_tb

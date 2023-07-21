@@ -2,7 +2,30 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+library matmul;
+use matmul.type_pkg.all;
+
 package component_pkg is
+
+  component processing_element_array is
+    generic (
+      NUM_ROWS    : integer := 2;
+      NUM_COLS    : integer := 2;
+      BIT_WIDTH   : integer := 8
+    );
+    port (
+      i_msg_recv_msg    : in  bus_array(NUM_ROWS-1 downto 0)(BIT_WIDTH-1+2 downto 0);
+      i_msg_recv_val    : in  std_logic_vector(NUM_ROWS-1 downto 0);
+      o_msg_recv_rdy    : out std_logic_vector(NUM_ROWS-1 downto 0);
+      
+      o_prod_send_msg    : out bus_array(NUM_COLS-1 downto 0)(BIT_WIDTH-1+1 downto 0);
+      o_prod_send_val    : out std_logic_vector(NUM_COLS-1 downto 0);
+      i_prod_send_rdy    : in  std_logic_vector(NUM_COLS-1 downto 0);
+  
+      i_clk              : in  std_logic;
+      i_rst              : in  std_logic
+    );
+  end component processing_element_array;
   
   component axi_reg_slave is
     generic (
@@ -11,14 +34,14 @@ package component_pkg is
     );
     port (
       -- Users to add ports here
-      i_input_ready		: in 	std_logic_vector(32 downto 0);
-      i_output_valid  : in  std_logic_vector(32 downto 0);
-      o_row1          : out std_logic_vector(32 downto 0);
-      o_row2          : out std_logic_vector(32 downto 0);
-      o_row3          : out std_logic_vector(32 downto 0);
-      i_out1          : in  std_logic_vector(32 downto 0);
-      i_out2          : in  std_logic_vector(32 downto 0);
-      i_out3          : in  std_logic_vector(32 downto 0);
+      i_input_ready		: in 	std_logic_vector(31 downto 0);
+      i_output_valid  : in  std_logic_vector(31 downto 0);
+      o_row1          : out std_logic_vector(31 downto 0);
+      o_row2          : out std_logic_vector(31 downto 0);
+      o_row3          : out std_logic_vector(31 downto 0);
+      i_out1          : in  std_logic_vector(31 downto 0);
+      i_out2          : in  std_logic_vector(31 downto 0);
+      i_out3          : in  std_logic_vector(31 downto 0);
       -- User ports ends
       -- Do not modify the ports beyond this line
 

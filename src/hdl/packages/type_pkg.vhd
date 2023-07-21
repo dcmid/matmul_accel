@@ -12,5 +12,11 @@ package type_pkg is
   type pe_message is record
     data      : std_logic_vector;
     is_weight : std_logic;
+    is_flush  : std_logic;
   end record pe_message;
+
+  type pe_part_prod is record
+    data      : std_logic_vector;
+    is_flush  : std_logic;
+  end record pe_part_prod;
 end package type_pkg;

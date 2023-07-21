@@ -83,8 +83,7 @@ module processing_element_tb;
   endtask
   //--------------------------------------------------------
 
-
-  int i = 0;
+  int soln_cnt = 0;
 
   initial begin
     clk = 0;
@@ -93,26 +92,22 @@ module processing_element_tb;
     rst = '1;
     @(posedge clk);
 
-    while (i < 5) begin
+    for (int i = 0; i < 5; i++) begin
       reset();
       load_weight(stim_weights[i]);
       load_neighbors(stim_activations[i], stim_part_prod[i]);
       @(posedge clk);
-
+      wait (part_prod_send_rdy);
+      @(posedge clk);
       $display ("weight:\t%d", stim_weights[i]);
       $display ("activ: \t%d", stim_activations[i]);
       $display ("expect:\t%d", expected[i]);
       $display ("actual:\t%d\n\n", part_prod_send);
-      // $display ("val?:\t%d", part_prod_send_val);
-      // assert (part_prod_send == expected[i]);
-      //assert (part_prod_send < 250);
-      // @(posedge clk);
-
-      i = i + 1;
     end
+    $stop;
   end
 
-    //generate a clock
+  //generate a clock
   always #period clk <= !clk;
 
   // dump for plotting waves
@@ -122,11 +117,11 @@ module processing_element_tb;
     //   $dumpvars (0, processing_element_tb);
     // end
 
-  always @(posedge clk) begin
-    if(i == 5) begin
-      $stop;
-    end
-  end
+  // always @(posedge clk) begin
+  //   if(i == 5) begin
+  //     $stop;
+  //   end
+  // end
 
   processing_element uut
   (
