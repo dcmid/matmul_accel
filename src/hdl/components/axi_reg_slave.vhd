@@ -7,7 +7,8 @@ entity axi_reg_slave is
 		NUM_REGS        : integer := 32;
 		AXI_DATA_WIDTH	: integer	:= 32;
 		AXI_ADDR_WIDTH	: integer	:= 7;
-		RD_ONLY         : std_logic_vector(NUM_REGS-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
+		-- TODO: fix this generic length
+		RD_ONLY         : std_logic_vector(32-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
 	);
 	port (
 		-- register data
@@ -45,6 +46,17 @@ end axi_reg_slave;
 
 architecture arch_imp of axi_reg_slave is
 
+	function log2( input:integer ) return integer is
+		variable temp,log:integer;
+	begin
+		temp:=input;
+		log:=0;
+		while (temp > 1) loop
+			temp:=temp/2;
+			log:=log+1;
+		end loop;
+		return log;
+	end function log2;
 
 	-- local parameter for addressing 32 bit / 64 bit AXI_DATA_WIDTH
 	-- ADDR_LSB is used for addressing 32/64 bit registers/memories
@@ -186,35 +198,42 @@ begin
 				reg_array <= (others => (others => '0'));
 	    else
 			  -- incoming writes from AXI
-	      if (reg_array_wren = '1' and RD_ONLY(opt_awaddr) = '0') then
+	      if (reg_array_wren = '1' and RD_ONLY(to_integer(unsigned(opt_awaddr))) = '0') then
 					for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
 						if ( S_AXI_WSTRB(byte_index) = '1' ) then
-							reg_array(unsigned(opt_awaddr))(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
+							reg_array(to_integer(unsigned(opt_awaddr)))(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
 						end if;
 					end loop;
 	      end if;
 				
 				-- incoming writes from PL
-				for i in 0 to NUM_REGS : loop
-					if (i_regs_wr_val(i) = '1' and regs_wr_rdy(i)) then
-						reg_array(i) <= i_regs(i);
+				for i in 0 to NUM_REGS-1 loop
+					if (i_regs_wr_val(i) = '1' and regs_wr_rdy(i) = '1') then
+						reg_array(i) <= i_regs((i+1)*AXI_DATA_WIDTH-1 downto i*AXI_DATA_WIDTH);
 					end if;
 				end loop;
 	    end if;
 	  end if;                   
 	end process; 
 
-	for i in 0 to NUM_REGS generate
+	gen_wr_rdy : for i in 0 to NUM_REGS-1 generate
 	  -- RD_ONLY regs can always be written
-	  if (RD_ONLY(i) = '1') then
+	  gen_rdonly : if (RD_ONLY(i) = '1') generate
 			regs_wr_rdy(i) <= '1';
-		-- Don't write regs while AXI is writing them
-	  elsif (reg_array_wren = '1' and unsigned(opt_awaddr) = i)  
-		  regs_wr_rdy(i) <= '0';
-		else
-		  regs_wr_rdy(i) <= '1';
-		end if;
-	end generate;
+		end generate gen_rdonly;
+
+		gen_rw : if (RD_ONLY(i) = '0') generate
+			process (reg_array_wren, opt_awaddr)
+			begin
+				-- Don't write regs while AXI is writing them
+				if (reg_array_wren = '1' and to_integer(unsigned(opt_awaddr)) = i)  then
+					regs_wr_rdy(i) <= '0';
+				else
+					regs_wr_rdy(i) <= '1';
+				end if;
+			end process;
+		end generate gen_rw;
+	end generate gen_wr_rdy;
 
 
 	-- Output 1-cycle pulse corresponding to register that was written or read via AXI
@@ -222,16 +241,16 @@ begin
 	begin
 		if rising_edge(S_AXI_ACLK) then
 			if S_AXI_ARESETN = '0' then
-				o_regs_wr_pulse <= '0';
-				o_regs_rd_pulse <= '0';
+				o_regs_wr_pulse <= (others => '0');
+				o_regs_rd_pulse <= (others => '0');
 			else
 			  o_regs_wr_pulse <= (others => '0');
 				o_regs_rd_pulse <= (others => '0');
 				if (reg_array_wren = '1') then
-					o_regs_wr_pulse(unsigned(opt_awaddr)) <= '1';
+					o_regs_wr_pulse(to_integer(unsigned(opt_awaddr))) <= '1';
 				end if;
 				if (reg_array_rden = '1') then
-					o_regs_rd_pulse(unsigned(opt_araddr)) <= '1';
+					o_regs_rd_pulse(to_integer(unsigned(opt_araddr))) <= '1';
 				end if;
 			end if;
 		end if;
@@ -320,7 +339,7 @@ begin
 	reg_array_rden <= axi_arready and S_AXI_ARVALID and (not axi_rvalid) ;
 
 	-- Address decoding for reading registers
-	reg_data_out <= reg_array(unsigned(opt_araddr));
+	reg_data_out <= reg_array(to_integer(unsigned(opt_araddr)));
 
 	-- Output register or memory read data
 	process( S_AXI_ACLK ) is

@@ -13,6 +13,7 @@ vmap unisim           $UNISIM_DIR/unisim
 vlib matmul
 vcom -2008 -work matmul     $origin_dir/../hdl/packages/type_pkg.vhd
 vcom -2008 -work matmul     $origin_dir/../hdl/packages/component_pkg.vhd
+vcom       -work matmul     $origin_dir/../hdl/packages/matmul_xcel_addr_pkg.vhd
 
 vlib work
 vlog -work work             $origin_dir/matmul_xcel_tb.sv

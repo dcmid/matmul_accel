@@ -5,6 +5,7 @@ use IEEE.numeric_std.all;
 library matmul;
 use matmul.type_pkg.all;
 use matmul.component_pkg.all;
+use matmul.matmul_xcel_addr_pkg.all;
 
 entity matmul_xcel is
   generic (
@@ -45,8 +46,26 @@ architecture rtl of matmul_xcel is
   constant MSG_WIDTH    : integer := BIT_WIDTH + 2;
   constant PP_MSG_WIDTH : integer := BIT_WIDTH + 1;
 
-  signal rd_regs      : std_logic_vector(NUM_REGS*BIT_WIDTH-1 downto 0);
-  signal wr_regs      : std_logic_vector(NUM_REGS*BIT_WIDTH-1 downto 0);
+  type idx_arr_t is array(natural range <>) of integer;
+  function idx_arr_to_slv (
+    idx_arr : in idx_arr_t )
+    return std_logic_vector is
+    variable slv : std_logic_vector(NUM_REGS-1 downto 0);
+    variable idx : integer;
+  begin
+    slv := (others => '0');
+    for i in idx_arr'range loop
+      idx := idx_arr(i);
+      slv(idx) := '1';
+    end loop;
+    return slv;
+  end function idx_arr_to_slv;
+
+  constant RD_ONLY_IDX  : idx_arr_t(0 to 1) := (OUT1_R, OUT2_R);
+  constant RD_ONLY      : std_logic_vector(NUM_REGS-1 downto 0) := idx_arr_to_slv(RD_ONLY_IDX);
+
+  signal rd_regs      : std_logic_vector(NUM_REGS*C_S_AXI_DATA_WIDTH-1 downto 0);
+  signal wr_regs      : std_logic_vector(NUM_REGS*C_S_AXI_DATA_WIDTH-1 downto 0);
   signal axi_rd_pulse : std_logic_vector(NUM_REGS-1 downto 0);
   signal axi_wr_pulse : std_logic_vector(NUM_REGS-1 downto 0);
   signal regs_wr_val  : std_logic_vector(NUM_REGS-1 downto 0);
@@ -54,12 +73,29 @@ architecture rtl of matmul_xcel is
 
   signal rst          : std_logic;
   
-  signal msg_recv_msg  : std_logic_vector(NUM_ROWS*MSG_WIDTH downto 0);
-  signal prod_send_msg : std_logic_vector(NUM_COLS*PP_MSG_WIDTH downto 0);
+  signal msg_recv_msg  : std_logic_vector(NUM_ROWS*MSG_WIDTH-1 downto 0);
+  signal msg_recv_val  : std_logic_vector(NUM_ROWS-1 downto 0);
+  signal msg_recv_rdy  : std_logic_vector(NUM_ROWS-1 downto 0);
+  signal prod_send_msg : std_logic_vector(NUM_COLS*PP_MSG_WIDTH-1 downto 0);
+  signal prod_send_val : std_logic_vector(NUM_COLS-1 downto 0);
+  signal prod_send_rdy : std_logic_vector(NUM_COLS-1 downto 0);
   
 begin
 
   rst <= not S_AXI_ARESETN;
+
+  gen_msg: for i in 0 to NUM_ROWS-1 generate
+    msg_recv_msg((i+1)*MSG_WIDTH-1 downto i*MSG_WIDTH) <= rd_regs((ROW0_W+i)*C_S_AXI_DATA_WIDTH + MSG_WIDTH - 1 downto (ROW0_W+i)*C_S_AXI_DATA_WIDTH);
+    msg_recv_val(i) <= axi_wr_pulse(ROW0_W+i);  -- TODO: probably need to latch this until we get a rdy
+  end generate gen_msg;
+
+  wr_regs <= (others => '0');
+  regs_wr_val <= (others => '0');
+  gen_pp_msg: for i in 0 to NUM_COLS-1 generate
+    wr_regs ((OUT0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH-1 downto (OUT0_R+i)*C_S_AXI_DATA_WIDTH) <= prod_send_msg((i+1)*PP_MSG_WIDTH - 1 downto i*PP_MSG_WIDTH);
+    regs_wr_val(OUT0_R+i) <= prod_send_val(i);
+    prod_send_rdy(i) <= regs_wr_rdy(OUT0_R+i);
+  end generate gen_pp_msg;
 
   u_processing_element_array : processing_element_array
   generic map(
@@ -69,24 +105,26 @@ begin
   )
   port map(
     i_msg_recv_msg  => msg_recv_msg,
-    i_msg_recv_val  => (others => '1'),
-    o_msg_recv_rdy  => input_ready(1 downto 0),
+    i_msg_recv_val  => msg_recv_val,
+    o_msg_recv_rdy  => msg_recv_rdy,  -- TODO: connect this
     o_prod_send_msg => prod_send_msg,
-    o_prod_send_val => output_valid(1 downto 0),
-    i_prod_send_rdy => (others => '1'),
+    o_prod_send_val => prod_send_val,
+    i_prod_send_rdy => prod_send_rdy,
     i_clk           => S_AXI_ACLK,
     i_rst           => rst
   );
   
   u_axi_reg_slave : axi_reg_slave
   generic map(
-    C_S_AXI_DATA_WIDTH => 32,
-    C_S_AXI_ADDR_WIDTH => 7
+    NUM_REGS => NUM_REGS,
+    AXI_DATA_WIDTH => C_S_AXI_DATA_WIDTH,
+    AXI_ADDR_WIDTH => C_S_AXI_ADDR_WIDTH,
+    RD_ONLY => RD_ONLY
   )
   port map(
     o_regs          => rd_regs,
     o_regs_wr_pulse => axi_wr_pulse,
-    o_regs_rd_pulse => axi_rd_pulse,
+    o_regs_rd_pulse => axi_rd_pulse,  -- TODO: connect this
     i_regs          => wr_regs,
     i_regs_wr_val   => regs_wr_val,
     o_regs_wr_rdy   => regs_wr_rdy,

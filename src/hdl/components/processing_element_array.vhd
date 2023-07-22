@@ -125,7 +125,7 @@ begin
       end generate ppif;
       -- connect last row to ports
       lastrow : if (i = NUM_ROWS-1) generate
-        o_prod_send_msg((j+1)*PP_MSG_WIDTH-1 downto i*PP_MSG_WIDTH) <=  part_prod_send(i,j);
+        o_prod_send_msg((j+1)*PP_MSG_WIDTH-1 downto j*PP_MSG_WIDTH) <=  part_prod_send(i,j);
         o_prod_send_val(j)        <=  part_prod_send_val(i,j);
         part_prod_send_rdy(i,j)   <=  i_prod_send_rdy(j);
       end generate lastrow;
