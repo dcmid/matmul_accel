@@ -89,13 +89,24 @@ begin
     msg_recv_val(i) <= axi_wr_pulse(ROW0_W+i);  -- TODO: probably need to latch this until we get a rdy
   end generate gen_msg;
 
-  wr_regs <= (others => '0');
-  regs_wr_val <= (others => '0');
+  -- wr_regs <= (others => '0');
+  -- regs_wr_val <= (others => '0');
   gen_pp_msg: for i in 0 to NUM_COLS-1 generate
+    -- connect unused upper bits of reg interface to '0'
+    wr_regs ((OUT0_R+i+1)*C_S_AXI_DATA_WIDTH - 1 downto (OUT0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH ) <= (others => '0');
+    -- connect incoming message to lowest bits of reg interface
     wr_regs ((OUT0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH-1 downto (OUT0_R+i)*C_S_AXI_DATA_WIDTH) <= prod_send_msg((i+1)*PP_MSG_WIDTH - 1 downto i*PP_MSG_WIDTH);
     regs_wr_val(OUT0_R+i) <= prod_send_val(i);
     prod_send_rdy(i) <= regs_wr_rdy(OUT0_R+i);
   end generate gen_pp_msg;
+
+  -- connect unused bits of wr_regs and regs_wr_val to '0'
+  gen_wr_regs_nc : for i in 0 to NUM_REGS-1 generate
+    gen_if_wr_reg_nc : if (i < OUT0_R or i >= OUT0_R+NUM_COLS) generate
+      wr_regs((i+1)*C_S_AXI_DATA_WIDTH-1 downto i*C_S_AXI_DATA_WIDTH) <= (others => '0');
+      regs_wr_val(i) <= '0'; 
+    end generate gen_if_wr_reg_nc;
+  end generate gen_wr_regs_nc;
 
   u_processing_element_array : processing_element_array
   generic map(

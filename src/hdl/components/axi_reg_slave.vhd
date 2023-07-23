@@ -111,6 +111,7 @@ begin
 
 	o_regs_wr_rdy <= regs_wr_rdy;
 	opt_awaddr <= axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
+	opt_araddr <= axi_araddr(ADDR_LSB + OPT_MEM_ADDR_BITS - 1 downto ADDR_LSB);
 
 	connect_o_regs : for i in 0 to NUM_REGS-1 generate
 		o_regs((i+1)*AXI_DATA_WIDTH-1 downto i*AXI_DATA_WIDTH) <= reg_array(i);
