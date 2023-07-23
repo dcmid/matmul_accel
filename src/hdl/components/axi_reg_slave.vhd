@@ -13,8 +13,8 @@ entity axi_reg_slave is
 	port (
 		-- register data
 		o_regs          : out std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
-		o_regs_wr_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
-		o_regs_rd_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
+		o_axi_wr_pulse  : out std_logic_vector(NUM_REGS-1 downto 0);
+		o_axi_rd_pulse  : out std_logic_vector(NUM_REGS-1 downto 0);
 		i_regs          : in  std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
 		i_regs_wr_val   : in  std_logic_vector(NUM_REGS-1 downto 0);
 		o_regs_wr_rdy   : out std_logic_vector(NUM_REGS-1 downto 0);
@@ -261,16 +261,16 @@ begin
 	begin
 		if rising_edge(S_AXI_ACLK) then
 			if S_AXI_ARESETN = '0' then
-				o_regs_wr_pulse <= (others => '0');
-				o_regs_rd_pulse <= (others => '0');
+				o_axi_wr_pulse <= (others => '0');
+				o_axi_rd_pulse <= (others => '0');
 			else
-			  o_regs_wr_pulse <= (others => '0');
-				o_regs_rd_pulse <= (others => '0');
+			  o_axi_wr_pulse <= (others => '0');
+				o_axi_rd_pulse <= (others => '0');
 				if (reg_array_wren = '1') then
-					o_regs_wr_pulse(to_integer(unsigned(opt_awaddr))) <= '1';
+					o_axi_wr_pulse(to_integer(unsigned(opt_awaddr))) <= '1';
 				end if;
 				if (reg_array_rden = '1') then
-					o_regs_rd_pulse(to_integer(unsigned(opt_araddr))) <= '1';
+					o_axi_rd_pulse(to_integer(unsigned(opt_araddr))) <= '1';
 				end if;
 			end if;
 		end if;

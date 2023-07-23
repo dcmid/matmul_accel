@@ -26,6 +26,38 @@ package component_pkg is
       i_rst              : in  std_logic
     );
   end component processing_element_array;
+
+  component matmul_xcel_regs is
+    generic (
+      NUM_REGS          : integer := 32;
+      AXI_DATA_WIDTH	  : integer	:= 32;
+      AXI_ADDR_WIDTH	  : integer	:= 7;
+      MATMUL_NUM_ROWS   : integer := 2;
+      MATMUL_NUM_COLS   : integer := 2;
+      MATMUL_BIT_WIDTH  : integer := 8
+    );
+    port (
+      -- axi_reg_slave interface (input regs)
+      i_regs_recv     : in  std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
+      i_axi_wr_pulse  : in  std_logic_vector(NUM_REGS-1 downto 0);
+      -- axi_reg_slave  interface (output regs)
+      o_regs_send     : out std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
+      o_regs_send_val : out std_logic_vector(NUM_REGS - 1 downto 0);
+      i_axi_rd_pulse  : in  std_logic_vector(NUM_REGS-1 downto 0);
+  
+      -- matmul_xcel row interface (output weights/activations)
+      o_row_msg       : out std_logic_vector(MATMUL_NUM_ROWS*(MATMUL_BIT_WIDTH+2)-1 downto 0);
+      o_row_msg_val   : out std_logic_vector(MATMUL_NUM_ROWS-1 downto 0);
+      i_row_msg_rdy   : in  std_logic_vector(MATMUL_NUM_ROWS-1 downto 0);
+      -- matmul_xcel col interface (input results)
+      i_col_msg       : in  std_logic_vector(MATMUL_NUM_COLS*(MATMUL_BIT_WIDTH+2)-1 downto 0);
+      i_col_msg_val   : in  std_logic_vector(MATMUL_NUM_COLS-1 downto 0);
+      o_col_msg_rdy   : out std_logic_vector(MATMUL_NUM_COLS-1 downto 0);
+  
+      i_clk           : in  std_logic;
+      i_rst           : in  std_logic
+    );
+  end component matmul_xcel_regs;
   
   component axi_reg_slave is
     generic (
@@ -38,8 +70,8 @@ package component_pkg is
     port (
       -- register data
       o_regs          : out std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
-      o_regs_wr_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
-      o_regs_rd_pulse : out std_logic_vector(NUM_REGS-1 downto 0);
+      o_axi_wr_pulse  : out std_logic_vector(NUM_REGS-1 downto 0);
+      o_axi_rd_pulse  : out std_logic_vector(NUM_REGS-1 downto 0);
       i_regs          : in  std_logic_vector(NUM_REGS*AXI_DATA_WIDTH-1 downto 0);
       i_regs_wr_val   : in  std_logic_vector(NUM_REGS-1 downto 0);
       o_regs_wr_rdy   : out std_logic_vector(NUM_REGS-1 downto 0);

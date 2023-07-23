@@ -93,16 +93,16 @@ begin
   -- regs_wr_val <= (others => '0');
   gen_pp_msg: for i in 0 to NUM_COLS-1 generate
     -- connect unused upper bits of reg interface to '0'
-    wr_regs ((OUT0_R+i+1)*C_S_AXI_DATA_WIDTH - 1 downto (OUT0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH ) <= (others => '0');
+    wr_regs ((COL0_R+i+1)*C_S_AXI_DATA_WIDTH - 1 downto (COL0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH ) <= (others => '0');
     -- connect incoming message to lowest bits of reg interface
-    wr_regs ((OUT0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH-1 downto (OUT0_R+i)*C_S_AXI_DATA_WIDTH) <= prod_send_msg((i+1)*PP_MSG_WIDTH - 1 downto i*PP_MSG_WIDTH);
-    regs_wr_val(OUT0_R+i) <= prod_send_val(i);
-    prod_send_rdy(i) <= regs_wr_rdy(OUT0_R+i);
+    wr_regs ((COL0_R+i)*C_S_AXI_DATA_WIDTH + PP_MSG_WIDTH-1 downto (COL0_R+i)*C_S_AXI_DATA_WIDTH) <= prod_send_msg((i+1)*PP_MSG_WIDTH - 1 downto i*PP_MSG_WIDTH);
+    regs_wr_val(COL0_R+i) <= prod_send_val(i);
+    prod_send_rdy(i) <= regs_wr_rdy(COL0_R+i);
   end generate gen_pp_msg;
 
   -- connect unused bits of wr_regs and regs_wr_val to '0'
   gen_wr_regs_nc : for i in 0 to NUM_REGS-1 generate
-    gen_if_wr_reg_nc : if (i < OUT0_R or i >= OUT0_R+NUM_COLS) generate
+    gen_if_wr_reg_nc : if (i < COL0_R or i >= COL0_R+NUM_COLS) generate
       wr_regs((i+1)*C_S_AXI_DATA_WIDTH-1 downto i*C_S_AXI_DATA_WIDTH) <= (others => '0');
       regs_wr_val(i) <= '0'; 
     end generate gen_if_wr_reg_nc;
@@ -134,8 +134,8 @@ begin
   )
   port map(
     o_regs          => rd_regs,
-    o_regs_wr_pulse => axi_wr_pulse,
-    o_regs_rd_pulse => axi_rd_pulse,  -- TODO: connect this
+    o_axi_wr_pulse  => axi_wr_pulse,
+    o_axi_rd_pulse  => axi_rd_pulse,  -- TODO: connect this
     i_regs          => wr_regs,
     i_regs_wr_val   => regs_wr_val,
     o_regs_wr_rdy   => regs_wr_rdy,
