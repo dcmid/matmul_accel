@@ -31,9 +31,9 @@ package component_pkg is
     generic (
       NUM_REGS        : integer := 32;
       AXI_DATA_WIDTH	: integer	:= 32;
-      AXI_ADDR_WIDTH	: integer	:= 7;
+      AXI_ADDR_WIDTH	: integer	:= 7
       -- TODO: Fix this generic length
-      RD_ONLY         : std_logic_vector(32-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
+      -- RD_ONLY         : std_logic_vector(32-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
     );
     port (
       -- register data

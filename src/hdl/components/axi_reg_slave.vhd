@@ -6,9 +6,9 @@ entity axi_reg_slave is
 	generic (
 		NUM_REGS        : integer := 32;
 		AXI_DATA_WIDTH	: integer	:= 32;
-		AXI_ADDR_WIDTH	: integer	:= 7;
+		AXI_ADDR_WIDTH	: integer	:= 7
 		-- TODO: fix this generic length
-		RD_ONLY         : std_logic_vector(32-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
+		-- RD_ONLY         : std_logic_vector(32-1 downto 0) := (others => '0') -- place '1' in bit corresponding to read only addresses
 	);
 	port (
 		-- register data
@@ -198,8 +198,16 @@ begin
 	    if S_AXI_ARESETN = '0' then
 				reg_array <= (others => (others => '0'));
 	    else
+			  -- -- incoming writes from AXI
+	      -- if (reg_array_wren = '1' and RD_ONLY(to_integer(unsigned(opt_awaddr))) = '0') then
+				-- 	for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
+				-- 		if ( S_AXI_WSTRB(byte_index) = '1' ) then
+				-- 			reg_array(to_integer(unsigned(opt_awaddr)))(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
+				-- 		end if;
+				-- 	end loop;
+	      -- end if;
 			  -- incoming writes from AXI
-	      if (reg_array_wren = '1' and RD_ONLY(to_integer(unsigned(opt_awaddr))) = '0') then
+	      if (reg_array_wren = '1') then
 					for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
 						if ( S_AXI_WSTRB(byte_index) = '1' ) then
 							reg_array(to_integer(unsigned(opt_awaddr)))(byte_index*8+7 downto byte_index*8) <= S_AXI_WDATA(byte_index*8+7 downto byte_index*8);
@@ -217,23 +225,34 @@ begin
 	  end if;                   
 	end process; 
 
-	gen_wr_rdy : for i in 0 to NUM_REGS-1 generate
-	  -- RD_ONLY regs can always be written
-	  gen_rdonly : if (RD_ONLY(i) = '1') generate
-			regs_wr_rdy(i) <= '1';
-		end generate gen_rdonly;
+	-- gen_wr_rdy : for i in 0 to NUM_REGS-1 generate
+	--   -- RD_ONLY regs can always be written
+	--   gen_rdonly : if (RD_ONLY(i) = '1') generate
+	-- 		regs_wr_rdy(i) <= '1';
+	-- 	end generate gen_rdonly;
 
-		gen_rw : if (RD_ONLY(i) = '0') generate
-			process (reg_array_wren, opt_awaddr)
-			begin
-				-- Don't write regs while AXI is writing them
-				if (reg_array_wren = '1' and to_integer(unsigned(opt_awaddr)) = i)  then
-					regs_wr_rdy(i) <= '0';
-				else
-					regs_wr_rdy(i) <= '1';
-				end if;
-			end process;
-		end generate gen_rw;
+	-- 	gen_rw : if (RD_ONLY(i) = '0') generate
+	-- 		process (reg_array_wren, opt_awaddr)
+	-- 		begin
+	-- 			-- Don't write regs while AXI is writing them
+	-- 			if (reg_array_wren = '1' and to_integer(unsigned(opt_awaddr)) = i)  then
+	-- 				regs_wr_rdy(i) <= '0';
+	-- 			else
+	-- 				regs_wr_rdy(i) <= '1';
+	-- 			end if;
+	-- 		end process;
+	-- 	end generate gen_rw;
+	-- end generate gen_wr_rdy;
+	gen_wr_rdy : for i in 0 to NUM_REGS-1 generate
+		process (reg_array_wren, opt_awaddr)
+		begin
+			-- Don't write regs while AXI is writing them
+			if (reg_array_wren = '1' and to_integer(unsigned(opt_awaddr)) = i)  then
+				regs_wr_rdy(i) <= '0';
+			else
+				regs_wr_rdy(i) <= '1';
+			end if;
+		end process;
 	end generate gen_wr_rdy;
 
 

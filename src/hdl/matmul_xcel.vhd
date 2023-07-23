@@ -46,23 +46,23 @@ architecture rtl of matmul_xcel is
   constant MSG_WIDTH    : integer := BIT_WIDTH + 2;
   constant PP_MSG_WIDTH : integer := BIT_WIDTH + 1;
 
-  type idx_arr_t is array(natural range <>) of integer;
-  function idx_arr_to_slv (
-    idx_arr : in idx_arr_t )
-    return std_logic_vector is
-    variable slv : std_logic_vector(NUM_REGS-1 downto 0);
-    variable idx : integer;
-  begin
-    slv := (others => '0');
-    for i in idx_arr'range loop
-      idx := idx_arr(i);
-      slv(idx) := '1';
-    end loop;
-    return slv;
-  end function idx_arr_to_slv;
+  -- type idx_arr_t is array(natural range <>) of integer;
+  -- function idx_arr_to_slv (
+  --   idx_arr : in idx_arr_t )
+  --   return std_logic_vector is
+  --   variable slv : std_logic_vector(NUM_REGS-1 downto 0);
+  --   variable idx : integer;
+  -- begin
+  --   slv := (others => '0');
+  --   for i in idx_arr'range loop
+  --     idx := idx_arr(i);
+  --     slv(idx) := '1';
+  --   end loop;
+  --   return slv;
+  -- end function idx_arr_to_slv;
 
-  constant RD_ONLY_IDX  : idx_arr_t(0 to 1) := (OUT1_R, OUT2_R);
-  constant RD_ONLY      : std_logic_vector(NUM_REGS-1 downto 0) := idx_arr_to_slv(RD_ONLY_IDX);
+  -- constant RD_ONLY_IDX  : idx_arr_t(0 to 1) := (OUT1_R, OUT2_R);
+  -- constant RD_ONLY      : std_logic_vector(NUM_REGS-1 downto 0) := idx_arr_to_slv(RD_ONLY_IDX);
 
   signal rd_regs      : std_logic_vector(NUM_REGS*C_S_AXI_DATA_WIDTH-1 downto 0);
   signal wr_regs      : std_logic_vector(NUM_REGS*C_S_AXI_DATA_WIDTH-1 downto 0);
@@ -129,8 +129,8 @@ begin
   generic map(
     NUM_REGS => NUM_REGS,
     AXI_DATA_WIDTH => C_S_AXI_DATA_WIDTH,
-    AXI_ADDR_WIDTH => C_S_AXI_ADDR_WIDTH,
-    RD_ONLY => RD_ONLY
+    AXI_ADDR_WIDTH => C_S_AXI_ADDR_WIDTH
+    -- RD_ONLY => RD_ONLY
   )
   port map(
     o_regs          => rd_regs,
