@@ -102,8 +102,8 @@ begin
           -- when col msg is consumed by axi_reg_slave,
           -- assert rdy to request new msg from matmul_xcel
           if (col_msg_send_val(j) = '1' and i_axi_rd_pulse(COL0_R + j) = '1') then
-            col_msg_recv_rdy <= (others => '1');
-            col_msg_send_val <= (others => '0');
+            col_msg_recv_rdy(j) <= '1';
+            col_msg_send_val(j) <= '0';
           end if;
         end loop;
       end if;
