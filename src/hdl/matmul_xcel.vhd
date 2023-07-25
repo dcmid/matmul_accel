@@ -65,11 +65,12 @@ architecture rtl of matmul_xcel is
   component ila_0 is
     port(
       probe0 : in std_logic_vector(3 downto 0);
-      probe1 : in std_logic_vector(35 downto 0);
-
-      probe2 : in std_logic_vector(31 downto 0);
-      probe3 : in std_logic_vector(0 downto 0);
-      probe4 : in std_logic_vector(0 downto 0);
+      probe1 : in std_logic_vector(3 downto 0);
+      probe2 : in std_logic_vector(39 downto 0);
+      probe3 : in std_logic_vector(127 downto 0);
+      probe4 : in std_logic_vector(31 downto 0);
+      probe5 : in std_logic_vector(31 downto 0);
+      probe6 : in std_logic_vector(0 downto 0);
 
       clk : in std_logic
     );
@@ -93,11 +94,13 @@ begin
 
   u_ila_0 : ila_0
     port map(
-      probe0 => prod_send_val,
-      probe1 => prod_send_msg,
-      probe2 => wr_regs(31 downto 0),
-      probe3(0) => regs_wr_val(0),
-      probe4(0) => rst,
+      probe0 => msg_recv_rdy,
+      probe1 => msg_recv_val,
+      probe2 => msg_recv_msg,
+      probe3 => wr_regs(127 downto 0),
+      probe4 => regs_wr_val,
+      probe5 => regs_wr_rdy,
+      probe6(0) => rst,
 
       clk => S_AXI_ACLK
     );

@@ -73,7 +73,7 @@ begin
           -- connect row outputs to register inputs.
           -- when row msg arrives from axi_reg_slave, 
           -- wait for matmul_xcel to consume before accepting another
-          if (i_axi_wr_pulse(i) = '1' and row_msg_recv_rdy(i) = '1') then
+          if (i_axi_wr_pulse(ROW0_W + i) = '1' and row_msg_recv_rdy(i) = '1') then
             reg_addr_lsb := (ROW0_W + i)*AXI_DATA_WIDTH;
             row_msg_recv_rdy(i) <= '0';
             row_msg_send_val(i) <= '1';
@@ -101,7 +101,7 @@ begin
 
           -- when col msg is consumed by axi_reg_slave,
           -- assert rdy to request new msg from matmul_xcel
-          if (col_msg_send_val(j) = '1' and i_axi_rd_pulse(j) = '1') then
+          if (col_msg_send_val(j) = '1' and i_axi_rd_pulse(COL0_R + j) = '1') then
             col_msg_recv_rdy <= (others => '1');
             col_msg_send_val <= (others => '0');
           end if;

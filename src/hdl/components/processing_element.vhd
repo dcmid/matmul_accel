@@ -161,8 +161,8 @@ begin
   fifo_msg_recv_wr_data <= i_msg_recv.is_flush & i_msg_recv.is_weight & i_msg_recv.data;
   o_msg_recv_rdy        <= not fifo_msg_recv_full;
   fifo_msg_recv_rd_en   <= msg_recv_rdy;
-  msg_recv.is_weight    <= fifo_msg_recv_rd_data(MSG_WIDTH-2);
   msg_recv.is_flush     <= fifo_msg_recv_rd_data(MSG_WIDTH-1);
+  msg_recv.is_weight    <= fifo_msg_recv_rd_data(MSG_WIDTH-2);
   msg_recv.data         <= fifo_msg_recv_rd_data(BIT_WIDTH-1 downto 0);
   msg_recv_val          <= not fifo_msg_recv_empty;
   msg_recv_fifo : fwft_fifo
