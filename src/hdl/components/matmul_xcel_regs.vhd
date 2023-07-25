@@ -28,7 +28,7 @@ entity matmul_xcel_regs is
     o_row_msg_val   : out std_logic_vector(MATMUL_NUM_ROWS-1 downto 0);
     i_row_msg_rdy   : in  std_logic_vector(MATMUL_NUM_ROWS-1 downto 0);
     -- matmul_xcel col interface (input results)
-    i_col_msg       : in  std_logic_vector(MATMUL_NUM_COLS*(MATMUL_BIT_WIDTH+2)-1 downto 0);
+    i_col_msg       : in  std_logic_vector(MATMUL_NUM_COLS*(MATMUL_BIT_WIDTH+1)-1 downto 0);
     i_col_msg_val   : in  std_logic_vector(MATMUL_NUM_COLS-1 downto 0);
     o_col_msg_rdy   : out std_logic_vector(MATMUL_NUM_COLS-1 downto 0);
 
@@ -73,7 +73,7 @@ begin
           -- connect row outputs to register inputs.
           -- when row msg arrives from axi_reg_slave, 
           -- wait for matmul_xcel to consume before accepting another
-          if (i_axi_wr_pulse(i) = '1' and row_msg_recv_rdy(i)) then
+          if (i_axi_wr_pulse(i) = '1' and row_msg_recv_rdy(i) = '1') then
             reg_addr_lsb := (ROW0_W + i)*AXI_DATA_WIDTH;
             row_msg_recv_rdy(i) <= '0';
             row_msg_send_val(i) <= '1';
@@ -82,18 +82,18 @@ begin
           
           -- when row msg is consumed by matmul_xcel,
           -- assert rdy to request new msg from axi_reg_slave
-          if (row_msg_send_val = '1' and i_row_msg_rdy = '1') then
+          if (row_msg_send_val(i) = '1' and i_row_msg_rdy(i) = '1') then
             row_msg_recv_rdy(i) <= '1';
             row_msg_send_val(i) <= '0';
           end if;
         end loop;
 
-        for j in 0 to MATMULNUM_COLS-1 loop
+        for j in 0 to MATMUL_NUM_COLS-1 loop
           -- connect column inputs to register outputs.
           -- when col msg arrives from matmul_xcel,
           -- wait for axi_reg_slave to consume before accepting another.
           if (i_col_msg_val(j) = '1' and col_msg_recv_rdy(j) = '1') then
-            reg_addr_lsb := (COL0_R + i)*AXI_DATA_WIDTH;
+            reg_addr_lsb := (COL0_R + j)*AXI_DATA_WIDTH;
             col_msg_recv_rdy(j) <= '0';
             col_msg_send_val(j) <= '1';
             o_regs_send(reg_addr_lsb + COL_MSG_WIDTH - 1 downto reg_addr_lsb) <= i_col_msg((j+1)*COL_MSG_WIDTH - 1 downto j*COL_MSG_WIDTH);
@@ -101,9 +101,9 @@ begin
 
           -- when col msg is consumed by axi_reg_slave,
           -- assert rdy to request new msg from matmul_xcel
-          if (col_msg_send_val(j) = '1' and i_axi_rd_pulse = '1') then
-            col_msg_recv_rdy <= '1';
-            col_msg_send_val <= '0';
+          if (col_msg_send_val(j) = '1' and i_axi_rd_pulse(j) = '1') then
+            col_msg_recv_rdy <= (others => '1');
+            col_msg_send_val <= (others => '0');
           end if;
         end loop;
       end if;
@@ -115,13 +115,13 @@ begin
     -- always enable write for status and column regs
     o_regs_send_val <= (others => '0');
     o_regs_send_val(STATUS_R) <= '1';
-    o_regs_send_val(COL0 + MATMUL_NUM_COLS - 1 downto COL0) <= (others => '0');
+    o_regs_send_val(COL0_R + MATMUL_NUM_COLS - 1 downto COL0_R) <= (others => '1');
 
     -- Connect row receive ready and column send valid to status register 
     -- so the PS can read them
     o_regs_send((STATUS_R+1)*AXI_DATA_WIDTH - 1 downto STATUS_R) <= (others => '0');
     o_regs_send(STATUS_R + MATMUL_NUM_ROWS - 1 downto STATUS_R) <= row_msg_recv_rdy;
-    o_regs_send(STATUS_R + 16 + MATMUL_NUM_COLS - 1 downto STATUS_R) <= col_msg_send_val;
+    o_regs_send(STATUS_R + 16 + MATMUL_NUM_COLS - 1 downto STATUS_R + 16) <= col_msg_send_val;
   end process proc_comb;
   
   

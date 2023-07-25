@@ -50,7 +50,7 @@ package component_pkg is
       o_row_msg_val   : out std_logic_vector(MATMUL_NUM_ROWS-1 downto 0);
       i_row_msg_rdy   : in  std_logic_vector(MATMUL_NUM_ROWS-1 downto 0);
       -- matmul_xcel col interface (input results)
-      i_col_msg       : in  std_logic_vector(MATMUL_NUM_COLS*(MATMUL_BIT_WIDTH+2)-1 downto 0);
+      i_col_msg       : in  std_logic_vector(MATMUL_NUM_COLS*(MATMUL_BIT_WIDTH+1)-1 downto 0);
       i_col_msg_val   : in  std_logic_vector(MATMUL_NUM_COLS-1 downto 0);
       o_col_msg_rdy   : out std_logic_vector(MATMUL_NUM_COLS-1 downto 0);
   

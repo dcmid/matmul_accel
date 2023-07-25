@@ -22,6 +22,7 @@ vcom -2008 -work work       $origin_dir/../hdl/components/fwft_fifo.vhd
 vcom -2008 -work work       $origin_dir/../hdl/components/processing_element.vhd
 vcom -2008 -work work       $origin_dir/../hdl/components/processing_element_array.vhd
 vcom -work work             $origin_dir/../hdl/components/axi_reg_slave.vhd
+vcom -2008 -work work       $origin_dir/../hdl/components/matmul_xcel_regs.vhd
 vcom -2008 -work work       $origin_dir/../hdl/matmul_xcel.vhd
 
 vsim -t 1ps -novopt work.matmul_xcel_tb

@@ -61,11 +61,23 @@ set files [list \
  [file normalize "${origin_dir}/../src/hdl/components/processing_element_array.vhd"] \
  [file normalize "${origin_dir}/../src/hdl/components/matmul_xcel_regs.vhd"] \
  [file normalize "${origin_dir}/../src/hdl/packages/component_pkg.vhd"] \
- [file normalize "${origin_dir}/../src/hdl/packages/matmul_xcel_Addr_pkg.vhd"] \
+ [file normalize "${origin_dir}/../src/hdl/packages/matmul_xcel_addr_pkg.vhd"] \
  [file normalize "${origin_dir}/../src/hdl/packages/type_pkg.vhd"] 
 ]
 add_files -norecurse -fileset $obj $files
 
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/components/axi_reg_slave.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/components/fwft_fifo.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/components/processing_element.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/components/processing_element_array.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/components/matmul_xcel_regs.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/packages/component_pkg.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/packages/matmul_xcel_addr_pkg.vhd"]
+set_property file_type {VHDL 2008} [get_files  "${origin_dir}/../src/hdl/packages/type_pkg.vhd"]
+
+set_property library matmul [get_files  "${origin_dir}/../src/hdl/packages/component_pkg.vhd"]
+set_property library matmul [get_files  "${origin_dir}/../src/hdl/packages/matmul_xcel_addr_pkg.vhd"]
+set_property library matmul [get_files  "${origin_dir}/../src/hdl/packages/type_pkg.vhd"]
 
 # # Create 'constrs_1' fileset (if not found)
 # if {[string equal [get_filesets -quiet constrs_1] ""]} {
